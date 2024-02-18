@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @JsonIgnoreProperties({"hibernateLazyInitializer","handler","products"})
 @Table(name = "categories")
-public class Category {
+public class CategoryEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "category_id")
@@ -30,6 +30,6 @@ public class Category {
     @Column(name = "picture")
     private String picture;
 
-    @OneToMany(mappedBy = "category")
-    private List<Product> products;
+    @OneToMany(mappedBy = "categoryEntity")
+    private List<ProductEntity> productEntities;
 }

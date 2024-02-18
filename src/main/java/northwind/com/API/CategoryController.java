@@ -5,14 +5,12 @@ import northwind.com.Business.Concretes.CategoryManager;
 import northwind.com.Business.Request.Category.CreateCategoryRequest;
 import northwind.com.Business.Request.Category.DeleteCategoryRequest;
 import northwind.com.Business.Request.Category.UpdateCategoryRequest;
-import northwind.com.Business.Response.GetAllCategoryResponse;
-import northwind.com.Business.Response.GetCategoryResponse;
+import northwind.com.Business.Response.Category.GetAllCategoryResponse;
+import northwind.com.Business.Response.Category.GetCategoryResponse;
 import northwind.com.Core.Results.DataResult;
 import northwind.com.Core.Results.Result;
 import northwind.com.Core.Results.SuccessDataResult;
-import northwind.com.Entities.Concrete.Category;
-import org.hibernate.sql.Update;
-import org.springframework.beans.factory.annotation.Autowired;
+import northwind.com.Entities.Concrete.CategoryEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,7 +30,7 @@ public class CategoryController {
     }
 
     @GetMapping("/getbyid")
-    public DataResult<Category> getById(GetCategoryResponse response) {
+    public DataResult<CategoryEntity> getById(GetCategoryResponse response) {
         return new SuccessDataResult<>(categoryService.getById(response).getData(), categoryService.getById(response).getMessage());
     }
     @PostMapping("/add")
