@@ -3,6 +3,8 @@ package northwind.com.API;
 
 import northwind.com.Business.Concretes.ProductManager;
 import northwind.com.Business.Request.Product.CreateProductRequest;
+import northwind.com.Business.Request.Product.DeleteProductRequest;
+import northwind.com.Business.Request.Product.UpdateProductRequest;
 import northwind.com.Business.Response.Product.GetAllProductResponse;
 import northwind.com.Business.Response.Product.GetByQuantityPerUnitResponse;
 import northwind.com.Core.Results.DataResult;
@@ -29,5 +31,13 @@ public class ProductController {
     @PostMapping("/add")
     public Result createProduct(@RequestBody CreateProductRequest response) {
         return productManager.createProduct(response);
+    }
+    @PostMapping("/update")
+    public Result updateProduct(@RequestBody UpdateProductRequest request) {
+        return productManager.updateProduct(request);
+    }
+    @PostMapping("/delete")
+    public Result deleteProduct(@RequestBody DeleteProductRequest request) {
+        return productManager.deleteProduct(request);
     }
 }

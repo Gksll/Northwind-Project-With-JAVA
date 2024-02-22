@@ -26,6 +26,7 @@ public class NorthwindApplication {
 		return new ModelMapper();
 	}
 
+
 	@ExceptionHandler
 	@ResponseStatus(code = HttpStatus.BAD_REQUEST)
 	public ErrorDataResult<Object> handleValidationExceptions(

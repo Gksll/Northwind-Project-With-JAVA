@@ -3,20 +3,27 @@ package northwind.com.Business.Concretes;
 
 import northwind.com.Business.Abstracts.ProductService;
 import northwind.com.Business.Request.Product.CreateProductRequest;
+import northwind.com.Business.Request.Product.DeleteProductRequest;
+import northwind.com.Business.Request.Product.UpdateProductRequest;
 import northwind.com.Business.Response.Product.GetAllProductResponse;
 import northwind.com.Business.Response.Product.GetByQuantityPerUnitResponse;
+import northwind.com.Core.DifferenceUtils;
 import northwind.com.Core.OperationStatus;
 import northwind.com.Core.Results.*;
 import northwind.com.Core.exceptions.BusinessException;
 import northwind.com.Core.mapping.ModelMapperService;
 import northwind.com.DataAccess.ProductRepository;
+import northwind.com.Entities.Concrete.CategoryEntity;
 import northwind.com.Entities.Concrete.ProductEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static northwind.com.Core.DifferenceUtils.getAndCheckNull;
 
 @Service
 public class ProductManager implements ProductService {
@@ -74,13 +81,39 @@ public class ProductManager implements ProductService {
 
     }
 
-
-    public static <T> T getAndCheckNull(T value) {
-        if (Objects.isNull(value)) {
-            throw new BusinessException("There is NO PRODUCT!");
+    @Override
+    public DataResult<List<String>> updateProduct(UpdateProductRequest request) {
+        getAndCheckNull(request);
+        ProductEntity productEntity = checkIfProductExistsForUpdate(request);
+        try {
+            ProductEntity productEntityToSave = this.modelMapperService.forRequest().map(request, ProductEntity.class);
+            List<String> strings = DifferenceUtils.getDifferences(productEntity,productEntityToSave);
+            this.productRepository.save(productEntityToSave);
+            return new SuccessDataResult<>(strings,"Product "+ OperationStatus.UPDATED.getDescription());
         }
-        return value;
+        catch (Exception e)
+        {
+            return new ErrorDataResult<>(e.getMessage());
+        }
     }
 
+    @Override
+    public Result deleteProduct(DeleteProductRequest request) {
+        getAndCheckNull(request);
+        ProductEntity productEntity = checkIfProductExistsForDelete(request);
+        productRepository.delete(productEntity);
+        return new SuccessResult("Product "+OperationStatus.DELETED.getDescription());
+    }
+
+    private ProductEntity checkIfProductExistsForDelete(DeleteProductRequest request) {
+        Optional<ProductEntity> optionalProduct = productRepository.findById(request.getProductId());
+        return optionalProduct.orElseThrow(() -> new BusinessException("Product " + OperationStatus.NOTFOUND.getDescription()));
+    }
+
+
+    private ProductEntity checkIfProductExistsForUpdate(UpdateProductRequest request) {
+        Optional<ProductEntity> optionalProduct= productRepository.findById(request.getProductId());
+        return optionalProduct.orElseThrow(() -> new BusinessException("Product " + OperationStatus.NOTFOUND.getDescription()));
+    }
 
 }

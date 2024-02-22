@@ -59,16 +59,15 @@ public class CategoryManager implements CategoryService {
         checkIfCategoryExists(request);
         CategoryEntity categoryEntityToAdd = this.modelmapperService.forRequest().map(request, CategoryEntity.class);
         categoryRepository.save(categoryEntityToAdd);
-        return new SuccessDataResult<>("Category "+ OperationStatus.ADDED.getDescription());
+        return new SuccessResult("Category "+ OperationStatus.ADDED.getDescription());
     }
 
     @Override
     public Result updateCategory(UpdateCategoryRequest request) {
-        CategoryEntity categoryEntity = checkIfCategoryExistsForUpdate(request);
-        categoryEntity.setCategoryName(request.getCategoryName());
-        categoryEntity.setDescription(request.getDescription());
-        categoryEntity.setPicture(request.getPicture());
+        checkIfCategoryExistsForUpdate(request);
+        CategoryEntity categoryEntity = this.modelmapperService.forRequest().map(request, CategoryEntity.class);
         categoryRepository.save(categoryEntity);
+
         return new SuccessDataResult<>("Category "+ OperationStatus.UPDATED.getDescription());
     }
 
