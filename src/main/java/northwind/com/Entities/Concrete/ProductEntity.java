@@ -1,5 +1,6 @@
 package northwind.com.Entities.Concrete;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "products")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","categoryEntity"})
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,4 +45,13 @@ public class ProductEntity {
     @ManyToOne
     @JoinColumn(name = "category_id")
     private CategoryEntity categoryEntity;
+
+    public String toString() {
+        return "ProductEntity{" +
+                "productId=" + productId +
+                ", productName='" + productName + '\'' +
+                (categoryEntity != null ? ", categoryName='" + categoryEntity.getCategoryName() + '\'' : "") +
+                '}';
+    }
+
 }

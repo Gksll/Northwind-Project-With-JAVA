@@ -22,13 +22,10 @@ import java.util.stream.Collectors;
 
 @Service
 public class CategoryManager implements CategoryService {
+    @Autowired
     private CategoryRepository categoryRepository;
     @Autowired
     private ModelMapperService modelmapperService;
-    public CategoryManager(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
-
 
     @Override
     public DataResult<List<GetAllCategoryResponse>> getAllCategories() {

@@ -1,12 +1,12 @@
 package northwind.com.Core;
 
-import northwind.com.Core.exceptions.BusinessException;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 @Component
 public class DifferenceUtils {
 
@@ -51,10 +51,5 @@ public class DifferenceUtils {
         return String.format("- %s: Old value: %s, New value: %s",
                 fieldName, oldFieldValue == null ? "null" : oldFieldValue.toString(), newFieldValue == null ? "null" : newFieldValue.toString());
     }
-    public static <T> T getAndCheckNull(T value) {
-        if (Objects.isNull(value)) {
-            throw new BusinessException("There is NO PRODUCT!");
-        }
-        return value;
-    }
+
 }

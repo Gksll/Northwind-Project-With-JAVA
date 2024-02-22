@@ -23,7 +23,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static northwind.com.Core.DifferenceUtils.getAndCheckNull;
 
 @Service
 public class ProductManager implements ProductService {
@@ -115,5 +114,10 @@ public class ProductManager implements ProductService {
         Optional<ProductEntity> optionalProduct= productRepository.findById(request.getProductId());
         return optionalProduct.orElseThrow(() -> new BusinessException("Product " + OperationStatus.NOTFOUND.getDescription()));
     }
-
+    public static <T> T getAndCheckNull(T value) {
+        if (Objects.isNull(value)) {
+            throw new BusinessException("There is NO PRODUCT!");
+        }
+        return value;
+    }
 }
