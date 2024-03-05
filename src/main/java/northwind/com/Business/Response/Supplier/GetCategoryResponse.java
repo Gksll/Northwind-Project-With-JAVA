@@ -1,4 +1,4 @@
-package northwind.com.Business.Response.Category;
+package northwind.com.Business.Response.Supplier;
 
 
 import lombok.AllArgsConstructor;
@@ -12,5 +12,4 @@ public class GetCategoryResponse {
     private int categoryId;
     private String categoryName;
     private String description;
-    private String picture;
 }

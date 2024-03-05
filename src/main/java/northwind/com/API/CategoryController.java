@@ -30,7 +30,7 @@ public class CategoryController {
     }
 
     @GetMapping("/getbyid")
-    public DataResult<CategoryEntity> getById(GetCategoryResponse response) {
+    public DataResult<GetCategoryResponse> getById(GetCategoryResponse response) {
         return new SuccessDataResult<>(categoryService.getById(response).getData(), categoryService.getById(response).getMessage());
     }
     @PostMapping("/add")

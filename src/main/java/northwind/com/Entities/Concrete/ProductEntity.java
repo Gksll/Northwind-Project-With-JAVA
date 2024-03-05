@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "products")
-@JsonIgnoreProperties({"hibernateLazyInitializer","handler","categoryEntity"})
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler","categoryEntity","supplierEntity"})
+
 public class ProductEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +21,6 @@ public class ProductEntity {
 
     @Column(name = "product_name")
     private String productName;
-
-    @Column(name = "supplier_id")
-    private Integer supplierId;
 
     @Column(name = "quantity_per_unit")
     private String quantityPerUnit;
@@ -46,11 +44,16 @@ public class ProductEntity {
     @JoinColumn(name = "category_id")
     private CategoryEntity categoryEntity;
 
+    @ManyToOne
+    @JoinColumn(name = "supplier_id")
+    private SupplierEntity supplierEntity;
+
     public String toString() {
         return "ProductEntity{" +
                 "productId=" + productId +
                 ", productName='" + productName + '\'' +
                 (categoryEntity != null ? ", categoryName='" + categoryEntity.getCategoryName() + '\'' : "") +
+                (supplierEntity != null ? ", supplierName='" + supplierEntity.getCompanyName() + '\'' : "") +
                 '}';
     }
 

@@ -39,13 +39,14 @@ public class CategoryManager implements CategoryService {
     }
 
     @Override
-    public DataResult<CategoryEntity> getById(GetCategoryResponse categoryResponse) {
+    public DataResult<GetCategoryResponse> getById(GetCategoryResponse categoryResponse) {
 
         if(Objects.nonNull(categoryResponse))
         {
-            CategoryEntity categoryEntityToFind = this.modelmapperService.forResponce().map(categoryResponse, CategoryEntity.class);
-            CategoryEntity categoryEntity = categoryRepository.findById(categoryEntityToFind.getCategoryId()).get();
-            return new SuccessDataResult<>(categoryEntity, "Category "+OperationStatus.LISTED.getDescription());
+
+            CategoryEntity categoryEntity = categoryRepository.findById(categoryResponse.getCategoryId()).get();
+            GetCategoryResponse categoryEntityToFind = this.modelmapperService.forResponce().map(categoryEntity, GetCategoryResponse.class);
+            return new SuccessDataResult<>(categoryEntityToFind, "Category "+OperationStatus.LISTED.getDescription());
         }
         else
             return new ErrorDataResult<>(OperationStatus.NOTLISTED.getDescription()+" Category");

@@ -9,7 +9,6 @@ import java.util.Objects;
 
 @Component
 public class DifferenceUtils {
-
     public static <T> List<String> getDifferences(T oldEntity, T newEntity) {
         List<String> differences = new ArrayList<>();
 

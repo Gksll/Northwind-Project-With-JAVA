@@ -14,7 +14,7 @@ import java.util.List;
 public interface CategoryService {
      DataResult<List<GetAllCategoryResponse>> getAllCategories();
 
-    DataResult<CategoryEntity> getById(GetCategoryResponse categoryResponse);
+    DataResult<GetCategoryResponse> getById(GetCategoryResponse categoryResponse);
 
     Result addCategory(CreateCategoryRequest request);
 
