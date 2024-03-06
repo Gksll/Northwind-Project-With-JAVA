@@ -17,7 +17,7 @@ import java.util.List;
 public class SupplierEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "supplier_id")
     private int supplierId;
 

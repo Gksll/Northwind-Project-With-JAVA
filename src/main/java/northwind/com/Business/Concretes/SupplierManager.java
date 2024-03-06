@@ -1,10 +1,14 @@
 package northwind.com.Business.Concretes;
 
 import northwind.com.Business.Abstracts.SupplierService;
+import northwind.com.Business.Request.Supplier.CreateSupplierRequest;
+import northwind.com.Business.Request.Supplier.DeleteSupplierRequest;
+import northwind.com.Business.Request.Supplier.UpdateSupplierRequest;
 import northwind.com.Business.Response.Supplier.GetAllSupplierResponse;
+import northwind.com.Business.Response.Supplier.GetSupplierResponse;
 import northwind.com.Core.OperationStatus;
-import northwind.com.Core.Results.DataResult;
-import northwind.com.Core.Results.SuccessDataResult;
+import northwind.com.Core.Results.*;
+import northwind.com.Core.exceptions.BusinessException;
 import northwind.com.Core.mapping.ModelMapperService;
 import northwind.com.DataAccess.SupplierRepository;
 import northwind.com.Entities.Concrete.SupplierEntity;
@@ -12,6 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -21,8 +27,6 @@ public class SupplierManager implements SupplierService {
     private ModelMapperService modelmapperService;
     @Autowired
     private SupplierRepository supplierRepository;
-
-
     @Override
     public DataResult<List<GetAllSupplierResponse>> getAllSuppliers() {
         List<SupplierEntity> entityList = this.supplierRepository.findAll();
@@ -33,71 +37,57 @@ public class SupplierManager implements SupplierService {
         return new SuccessDataResult<>(getAllSupplierResponseList, " All supliers " + OperationStatus.LISTEDALL.getDescription());
     }
 
-//    @Override
-//    public DataResult<List<GetAllCategoryResponse>> getAllCategories() {
-//        List<CategoryEntity> categoryEntityList = categoryRepository.findAll();
-//
-//        List<GetAllCategoryResponse> responses = categoryEntityList.stream()
-//                .map(category -> this.modelmapperService.forResponce().map(category, GetAllCategoryResponse.class))
-//                .collect(Collectors.toList());
-//
-//        return new SuccessDataResult<>(responses, "All categories" + OperationStatus.LISTEDALL.getDescription());
-//    }
-//
-//    @Override
-//    public DataResult<GetCategoryResponse> getById(GetCategoryResponse categoryResponse) {
-//
-//        if(Objects.nonNull(categoryResponse))
-//        {
-//
-//            CategoryEntity categoryEntity = categoryRepository.findById(categoryResponse.getCategoryId()).get();
-//            GetCategoryResponse categoryEntityToFind = this.modelmapperService.forResponce().map(categoryEntity, GetCategoryResponse.class);
-//            return new SuccessDataResult<>(categoryEntityToFind, "Category "+OperationStatus.LISTED.getDescription());
-//        }
-//        else
-//            return new ErrorDataResult<>(OperationStatus.NOTLISTED.getDescription()+" Category");
-//    }
-//
-//    @Override
-//    public Result addCategory(CreateCategoryRequest request) {
-//        checkIfCategoryExists(request);
-//        CategoryEntity categoryEntityToAdd = this.modelmapperService.forRequest().map(request, CategoryEntity.class);
-//        categoryRepository.save(categoryEntityToAdd);
-//        return new SuccessResult("Category "+ OperationStatus.ADDED.getDescription());
-//    }
-//
-//    @Override
-//    public Result updateCategory(UpdateCategoryRequest request) {
-//        checkIfCategoryExistsForUpdate(request);
-//        CategoryEntity categoryEntity = this.modelmapperService.forRequest().map(request, CategoryEntity.class);
-//        categoryRepository.save(categoryEntity);
-//
-//        return new SuccessDataResult<>("Category "+ OperationStatus.UPDATED.getDescription());
-//    }
-//
-//
-//
-//    @Override
-//    public Result deleteCategory(DeleteCategoryRequest request) {
-//        CategoryEntity categoryEntity = checkIfCategoryExistsForDelete(request);
-//        categoryRepository.delete(categoryEntity);
-//        return new SuccessResult("Category "+OperationStatus.DELETED.getDescription());
-//    }
-//
-//    private CategoryEntity checkIfCategoryExistsForDelete(DeleteCategoryRequest request) {
-//        Optional<CategoryEntity> optionalCategory = categoryRepository.findById(request.getCategoryId());
-//        return optionalCategory.orElseThrow(() -> new BusinessException("Category " + OperationStatus.NOTFOUND.getDescription()));
-//    }
-//
-//    private void checkIfCategoryExists(CreateCategoryRequest request) {
-//        CategoryEntity categoryEntity = categoryRepository.findByCategoryName(request.getCategoryName());
-//        if(Objects.nonNull(categoryEntity))
-//            throw new BusinessException("Category" + OperationStatus.EXISTS.getDescription());
-//    }
-//
-//    private CategoryEntity checkIfCategoryExistsForUpdate(UpdateCategoryRequest request) {
-//        Optional<CategoryEntity> optionalCategory = categoryRepository.findById(request.getCategoryId());
-//        return optionalCategory.orElseThrow(() -> new BusinessException("Category " + OperationStatus.NOTFOUND.getDescription()));
-//    }
+    @Override
+    public DataResult<GetSupplierResponse> getById(GetSupplierResponse response) {
+        if(Objects.nonNull(response))
+        {
+            SupplierEntity supplierEntity = this.supplierRepository.findById(response.getSupplierId()).get();
+            GetSupplierResponse supplierToFind = this.modelmapperService.forResponce().map(supplierEntity, GetSupplierResponse.class);
+            return new SuccessDataResult<>(supplierToFind, "Supplier "+OperationStatus.LISTED.getDescription());
+        }
+        else
+            return new ErrorDataResult<>(OperationStatus.NOTLISTED.getDescription()+" Supplier");
+    }
+
+    @Override
+    public Result addSupplier(CreateSupplierRequest request) {
+        checkIfSupplierExists(request);
+        SupplierEntity supplierEntityToAdd = this.modelmapperService.forRequest().map(request, SupplierEntity.class);
+        this.supplierRepository.save(supplierEntityToAdd);
+        return new SuccessResult("Supplier  "+ OperationStatus.ADDED.getDescription());
+    }
+
+    @Override
+    public Result updateSupplier(UpdateSupplierRequest request) {
+        checkIfSupplierExistsForUpdate(request);
+        SupplierEntity supplierEntity = this.modelmapperService.forRequest().map(request, SupplierEntity.class);
+        this.supplierRepository.save(supplierEntity);
+        return new SuccessResult("Supplier "+ OperationStatus.UPDATED.getDescription());
+    }
+
+
+
+
+    @Override
+    public Result deleteSupplier(DeleteSupplierRequest request) {
+        SupplierEntity supplierEntity = checkIfSupplierExistsForDelete(request);
+        this.supplierRepository.delete(supplierEntity);
+        return new SuccessResult("Supplier  "+OperationStatus.DELETED.getDescription());
+    }
+
+    private SupplierEntity checkIfSupplierExistsForDelete(DeleteSupplierRequest request) {
+        Optional<SupplierEntity> optionalSupplier = this.supplierRepository.findById(request.getSupplierId());
+        return optionalSupplier.orElseThrow(() -> new BusinessException("Supplier " + OperationStatus.NOTFOUND.getDescription()));
+    }
+    private void checkIfSupplierExists(CreateSupplierRequest request) {
+        SupplierEntity byCompanyName = supplierRepository.findByCompanyName(request.getCompanyName());
+        if(Objects.nonNull(byCompanyName))
+            throw new BusinessException("Supplier " + OperationStatus.EXISTS.getDescription());
+    }
+
+    private void checkIfSupplierExistsForUpdate(UpdateSupplierRequest request) {
+        Optional<SupplierEntity> optionalSupplier = this.supplierRepository.findById(request.getSupplierId());
+        optionalSupplier.orElseThrow(() -> new BusinessException("Supplier " + OperationStatus.NOTFOUND.getDescription()));
+    }
 
 }
