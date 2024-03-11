@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Entity
 @NoArgsConstructor
@@ -48,12 +50,16 @@ public class ProductEntity {
     @JoinColumn(name = "supplier_id")
     private SupplierEntity supplierEntity;
 
+    @OneToMany(mappedBy = "productEntity")
+    private List<OrderDetailEntity> orderDetails;
+
     public String toString() {
         return "ProductEntity{" +
                 "productId=" + productId +
                 ", productName='" + productName + '\'' +
                 (categoryEntity != null ? ", categoryName='" + categoryEntity.getCategoryName() + '\'' : "") +
                 (supplierEntity != null ? ", supplierName='" + supplierEntity.getCompanyName() + '\'' : "") +
+                (orderDetails != null ? ", orderDetail='" + orderDetails.stream().findFirst().get().getDiscount() + '\'' : "") +
                 '}';
     }
 
