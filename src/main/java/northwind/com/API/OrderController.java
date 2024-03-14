@@ -7,6 +7,8 @@ import northwind.com.Business.Request.Category.CreateCategoryRequest;
 import northwind.com.Business.Request.Category.DeleteCategoryRequest;
 import northwind.com.Business.Request.Category.UpdateCategoryRequest;
 import northwind.com.Business.Request.Order.CreateOrderRequest;
+import northwind.com.Business.Request.Order.DeleteOrderRequest;
+import northwind.com.Business.Request.Order.UpdateOrderRequest;
 import northwind.com.Business.Response.Category.GetAllCategoryResponse;
 import northwind.com.Business.Response.Category.GetCategoryResponse;
 import northwind.com.Business.Response.Order.GetAllOrderResponse;
@@ -42,14 +44,14 @@ public class OrderController {
     {
         return orderService.addOrder(createOrderRequest);
     }
-//    @PostMapping("/update")
-//    public Result Update(@RequestBody UpdateCategoryRequest updateCategoryRequest)
-//    {
-//        return categoryService.updateCategory(updateCategoryRequest);
-//    }
-//    @DeleteMapping("/delete")
-//    public Result Delete(@RequestBody DeleteCategoryRequest deleteCategoryRequest)
-//    {
-//        return categoryService.deleteCategory(deleteCategoryRequest);
-//    }
+    @PostMapping("/update")
+    public Result Update(@RequestBody UpdateOrderRequest updateOrderRequest)
+    {
+        return orderService.updateOrder(updateOrderRequest);
+    }
+    @DeleteMapping("/delete")
+    public Result Delete(@RequestBody DeleteOrderRequest deleteOrderRequest)
+    {
+        return orderService.deleteOrder(deleteOrderRequest);
+    }
 }

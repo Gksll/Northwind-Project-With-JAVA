@@ -68,48 +68,34 @@ public class OrderManager implements OrderService {
 
     @Override
     public Result updateOrder(UpdateOrderRequest request) {
-        return null;
+        checkIfOrderExistsForUpdate(request);
+        OrderEntity orderEntity= this.modelmapperService.forRequest().map(request, OrderEntity.class);
+        orderRepository.save(orderEntity);
+
+        return new SuccessDataResult<>("ORDER "+ OperationStatus.UPDATED.getDescription());
     }
 
     @Override
     public Result deleteOrder(DeleteOrderRequest request) {
-        return null;
+        OrderEntity orderEntity = checkIfOrderExistsForDelete(request);
+        orderRepository.delete(orderEntity);
+        return new SuccessResult("Order "+OperationStatus.DELETED.getDescription());
+    }
+    private OrderEntity checkIfOrderExistsForDelete(DeleteOrderRequest request) {
+        Optional<OrderEntity> optionalOrder = orderRepository.findById(request.getOrderId());
+        return optionalOrder.orElseThrow(() -> new BusinessException("ORDER " + OperationStatus.NOTFOUND.getDescription()));
     }
 
-
-//    @Override
-//    public Result updateCategory(UpdateCategoryRequest request) {
-//        checkIfCategoryExistsForUpdate(request);
-//        CategoryEntity categoryEntity = this.modelmapperService.forRequest().map(request, CategoryEntity.class);
-//        categoryRepository.save(categoryEntity);
-//
-//        return new SuccessDataResult<>("Category "+ OperationStatus.UPDATED.getDescription());
-//    }
-//
-//
-//
-//    @Override
-//    public Result deleteCategory(DeleteCategoryRequest request) {
-//        CategoryEntity categoryEntity = checkIfCategoryExistsForDelete(request);
-//        categoryRepository.delete(categoryEntity);
-//        return new SuccessResult("Category "+OperationStatus.DELETED.getDescription());
-//    }
-//
-//    private CategoryEntity checkIfCategoryExistsForDelete(DeleteCategoryRequest request) {
-//        Optional<CategoryEntity> optionalCategory = categoryRepository.findById(request.getCategoryId());
-//        return optionalCategory.orElseThrow(() -> new BusinessException("Category " + OperationStatus.NOTFOUND.getDescription()));
-//    }
-//
     private void checkIfOrderExists(CreateOrderRequest request) {
         List<OrderEntity> entities = orderRepository.findByCustomerIdAndEmployeeId(request.getCustomerId(), request.getEmployeeId());
 
         if(entities.size()>0)
             throw new BusinessException("ORDER " + OperationStatus.EXISTS.getDescription());
     }
-//
-//    private CategoryEntity checkIfCategoryExistsForUpdate(UpdateCategoryRequest request) {
-//        Optional<CategoryEntity> optionalCategory = categoryRepository.findById(request.getCategoryId());
-//        return optionalCategory.orElseThrow(() -> new BusinessException("Category " + OperationStatus.NOTFOUND.getDescription()));
-//    }
+
+    private OrderEntity checkIfOrderExistsForUpdate(UpdateOrderRequest request) {
+        Optional<OrderEntity> orderEntity = orderRepository.findById(request.getOrderId());
+        return orderEntity.orElseThrow(() -> new BusinessException("Order " + OperationStatus.NOTFOUND.getDescription()));
+    }
 
 }
